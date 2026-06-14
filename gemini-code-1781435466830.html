@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Access Life Concierge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Moderne Fonts: Plus Jakarta Sans für Überschriften & Satoshi für den Fließtext -->
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#07090f;
+  --bg2:#0c0f1a;
+  --bg3:#101525;
+  --blue:#2563ff;
+  --blue2:#3b74ff;
+  --blue-a:rgba(37,99,255,0.10);
+  --blue-b:rgba(37,99,255,0.18);
+  --white:#ffffff;
+  --off:#c8d0e0;
+  --muted:#566070;
+  --border:rgba(255,255,255,0.07);
+  --border-b:rgba(37,99,255,0.20);
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'Satoshi', sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:24px 64px;
+  transition:background 0.3s,border-color 0.3s;
+}
+nav.sc{background:rgba(7,9,15,0.97);border-bottom:1px solid var(--border)}
+
+.logo{
+  font-family:'Satoshi',sans-serif;font-weight:700;
+  font-size:13px;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--white);text-decoration:none;
+  display:flex;align-items:center;gap:8px;
+}
+.logo-dot{width:6px;height:6px;background:var(--blue);border-radius:50%}
+
+.nav-links{display:flex;gap:40px;list-style:none}
+.nav-links a{font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color 0.2s;font-weight:500}
+.nav-links a:hover{color:var(--white)}
+
+.nav-btn{
+  font-size:10px;letter-spacing:0.16em;text-transform:uppercase;
+  border:1px solid rgba(37,99,255,0.5);color:var(--blue2);font-weight:500;
+  padding:10px 24px;text-decoration:none;transition:all 0.2s;
+  border-radius:2px;
+}
+.nav-btn:hover{background:var(--blue);color:var(--white);border-color:var(--blue)}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:120px 64px 100px;
+  position:relative;overflow:hidden;
+}
+
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 50% 60% at 75% 45%, rgba(37,99,255,0.13) 0%, transparent 65%);
+  pointer-events:none;
+}
+
+.h-label{
+  font-size:10px;letter-spacing:0.28em;text-transform:uppercase;
+  color:var(--blue2);margin-bottom:40px;font-weight:700;
+  display:flex;align-items:center;gap:12px;
+}
+.h-label::before{content:'';width:24px;height:1px;background:var(--blue2)}
+
+h1{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:clamp(44px,5.5vw,84px);
+  font-weight:300;line-height:1.15;
+  letter-spacing:-0.03em;
+  max-width:900px;
+  margin-bottom:36px;
+}
+h1 i{font-style:normal;font-weight:600;color:var(--blue2)}
+
+.h-sub{
+  font-size:14px;color:var(--muted);line-height:1.85;
+  max-width:440px;margin-bottom:52px;font-weight:400;
+}
+
+.h-actions{display:flex;align-items:center;gap:36px}
+
+.btn{
+  font-size:10px;letter-spacing:0.18em;text-transform:uppercase;
+  background:var(--blue);color:var(--white);font-weight:700;
+  padding:14px 38px;text-decoration:none;
+  transition:background 0.2s;border-radius:2px;display:inline-block;
+}
+.btn:hover{background:var(--blue2)}
+
+.btn-text{
+  font-size:10px;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;font-weight:700;
+  display:flex;align-items:center;gap:8px;transition:color 0.2s;
+}
+.btn-text:hover{color:var(--white)}
+.btn-text::after{content:'→';font-size:14px}
+
+.h-stats{
+  position:absolute;right:64px;bottom:80px;
+  display:flex;flex-direction:column;gap:32px;
+}
+.stat{border-left:1px solid var(--border-b);padding-left:18px}
+.stat-n{font-family:'Plus Jakarta Sans',sans-serif;font-size:30px;font-weight:600;line-height:1;color:var(--white);letter-spacing:-0.02em}
+.stat-l{font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-top:5px;font-weight:500}
+
+/* TICKER */
+.ticker{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:14px 0;background:var(--bg2)}
+.tk{display:flex;animation:tk 26s linear infinite;white-space:nowrap}
+.ti{display:inline-flex;align-items:center;gap:28px;font-size:9px;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);padding:0 36px;flex-shrink:0;transition:color 0.2s;font-weight:500}
+.ti:hover{color:var(--blue2);cursor:default}
+.td{color:var(--blue);font-size:5px}
+@keyframes tk{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* SECTION BASE */
+section{padding:110px 64px}
+
+.tag{font-size:9px;letter-spacing:0.28em;text-transform:uppercase;color:var(--blue2);margin-bottom:18px;display:flex;align-items:center;gap:12px;font-weight:700}
+.tag::before{content:'';width:16px;height:1px;background:var(--blue2)}
+
+h2{
+  font-family:'Plus Jakarta Sans',sans-serif;
+  font-size:clamp(32px,3.5vw,52px);
+  font-weight:300;line-height:1.2;margin-bottom:16px;letter-spacing:-0.02em;
+}
+h2 i{font-style:normal;font-weight:600;color:var(--blue2)}
+
+.lead{font-size:13px;color:var(--muted);line-height:1.9;max-width:420px;margin-bottom:60px}
+
+/* SERVICES */
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:56px}
+.sc{
+  background:var(--bg);padding:44px 36px;
+  position:relative;border-bottom:2px solid transparent;transition:background 0.25s,border-color 0.25s;
+}
+.sc:hover{background:var(--bg2);border-bottom-color:var(--blue)}
+.sc-n{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:44px;color:rgba(37,99,255,0.07);line-height:1;margin-bottom:28px;transition:color 0.25s}
+.sc:hover .sc-n{color:rgba(37,99,255,0.13)}
+.sc-ico{width:36px;height:36px;border:1px solid var(--border-b);background:var(--blue-a);display:flex;align-items:center;justify-content:center;font-size:15px;margin-bottom:18px}
+.sc-t{font-size:15px;font-weight:500;margin-bottom:10px;letter-spacing:-0.01em}
+.sc-d{font-size:12px;color:var(--muted);line-height:1.85}
+.sc-arrow{margin-top:24px;font-size:9px;letter-spacing:0.18em;text-transform:uppercase;color:var(--blue2);opacity:0;transition:opacity 0.2s;font-weight:700}
+.sc:hover .sc-arrow{opacity:1}
+
+/* PARTNERS */
+.ptrs-bg{background:var(--bg2)}
+.ptrs-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:52px;flex-wrap:wrap;gap:24px}
+.ptrs-note{font-size:12px;color:var(--muted);max-width:240px;line-height:1.75}
+.pg{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border)}
+.pt{background:var(--bg2);padding:28px 24px;display:flex;flex-direction:column;justify-content:space-between;min-height:130px;border:1px solid transparent;transition:background 0.2s,border-color 0.2s}
+.pt:hover{background:var(--bg3);border-color:var(--border-b)}
+.pt-cat{font-size:8px;letter-spacing:0.22em;text-transform:uppercase;color:var(--blue2);margin-bottom:10px;opacity:0.7;font-weight:700}
+.pt-name{font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;font-size:16px;color:var(--white);line-height:1.3;letter-spacing:-0.01em}
+.pt-bar{width:16px;height:1px;background:var(--blue);margin-top:12px;opacity:0.4;transition:opacity 0.2s}
+.pt:hover .pt-bar{opacity:1}
+
+/* PROCESS */
+.pr-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:52px}
+.pr{padding:44px 36px;border-top:1px solid var(--border-b);position:relative;transition:background 0.2s}
+.pr::after{content:'';position:absolute;top:-1px;left:0;width:0;height:2px;background:var(--blue);transition:width 0.45s ease}
+.pr:hover{background:var(--bg2)}
+.pr:hover::after{width:100%}
+.pr-n{font-size:9px;letter-spacing:0.2em;color:var(--blue2);margin-bottom:24px;font-weight:700}
+.pr-t{font-family:'Plus Jakarta Sans',sans-serif;font-weight:500;font-size:20px;margin-bottom:12px;letter-spacing:-0.01em}
+.pr-d{font-size:12px;color:var(--muted);line-height:1.85}
+
+/* TRUSTPILOT / REVIEWS */
+.rev-bg{background:var(--bg2)}
+
+.tp-header{
+  display:flex;align-items:center;gap:32px;
+  margin-bottom:56px;flex-wrap:wrap;padding-bottom:40px;
+  border-bottom:1px solid var(--border);
+}
+
+.tp-logo{display:flex;align-items:center;gap:10px}
+.tp-wordmark{
+  font-size:22px;font-weight:700;color:var(--white);letter-spacing:-0.03em;
+}
+.tp-wordmark span{color:#00b67a}
+
+.tp-score-block{display:flex;align-items:center;gap:16px}
+.tp-score-num{font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;font-size:42px;line-height:1;color:var(--white);letter-spacing:-0.02em}
+.tp-score-info{}
+.tp-stars{display:flex;gap:3px;margin-bottom:5px}
+.tp-star{
+  width:22px;height:22px;background:#00b67a;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:white;border-radius:2px;
+}
+.tp-star.half{background:linear-gradient(90deg,#00b67a 80%,#dcdce6 80%)}
+.tp-label{font-size:11px;color:var(--muted);font-weight:500}
+.tp-count{font-size:11px;color:var(--muted);margin-top:2px}
+
+.tp-badge{
+  margin-left:auto;
+  display:flex;flex-direction:column;align-items:center;
+  border:1px solid rgba(0,182,122,0.25);
+  padding:14px 20px;border-radius:4px;text-align:center;
+}
+.tp-badge-star{font-size:10px;letter-spacing:0.15em;text-transform:uppercase;color:#00b67a;margin-bottom:4px}
+.tp-badge-label{font-size:9px;color:var(--muted);letter-spacing:0.1em}
+
+.rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border)}
+.rc{
+  background:var(--bg2);padding:36px 30px;
+  border:1px solid transparent;transition:border-color 0.2s}
+.rc:hover{border-color:rgba(0,182,122,0.2)}
+.rc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.rc-stars{display:flex;gap:2px}
+.rc-star{width:16px;height:16px;background:#00b67a;display:flex;align-items:center;justify-content:center;font-size:9px;color:white;border-radius:1px}
+.rc-verified{font-size:8px;letter-spacing:0.15em;text-transform:uppercase;color:#00b67a;display:flex;align-items:center;gap:4px;font-weight:700}
+.rc-q{
+  font-size:15px;line-height:1.6;color:var(--off);margin-bottom:24px;font-style:normal;
+}
+.rc-author{display:flex;align-items:center;gap:12px;padding-top:20px;border-top:1px solid var(--border)}
+.rc-av{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--blue-a);border:1px solid var(--border-b);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:var(--blue2);
+}
+.rc-name{font-size:12px;font-weight:500;color:var(--white)}
+.rc-info{font-size:10px;color:var(--muted);margin-top:1px}
+.rc-date{font-size:9px;color:var(--muted);margin-left:auto}
+
+/* FAQ */
+.faq-wrap{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.faq-list{}
+.fi{border-top:1px solid var(--border);padding:22px 0;cursor:pointer}
+.fi:last-child{border-bottom:1px solid var(--border)}
+.fi-q{display:flex;justify-content:space-between;align-items:center;font-size:14px;font-weight:500;color:var(--white);transition:color 0.2s}
+.fi:hover .fi-q{color:var(--blue2)}
+.fi-plus{width:24px;height:24px;border:1px solid var(--border-b);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--blue2);flex-shrink:0;margin-left:18px;transition:transform 0.22s,background 0.2s}
+.fi.open .fi-plus{transform:rotate(45deg);background:var(--blue-a)}
+.fi-a{font-size:12px;color:var(--muted);line-height:1.9;max-height:0;overflow:hidden;transition:max-height 0.35s,padding 0.22s}
+.fi.open .fi-a{max-height:160px;padding-top:14px}
+
+/* CTA */
+.cta{background:var(--bg3);padding:110px 64px;text-align:center;position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 50% at 50% 0%,rgba(37,99,255,0.10) 0%,transparent 65%);pointer-events:none}
+.cta .tag{justify-content:center}
+.cta h2{max-width:620px;margin:0 auto 20px}
+.cta .lead{margin:0 auto 44px;text-align:center;max-width:380px}
+.cta-line{width:32px;height:1px;background:var(--blue);margin:0 auto 36px;opacity:0.5}
+
+/* FOOTER */
+footer{background:var(--bg);padding:56px 64px 36px;border-top:1px solid var(--border)}
+.ft{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;flex-wrap:wrap;gap:36px}
+.f-brand{font-size:12px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--white);display:flex;align-items:center;gap:7px}
+.f-sub{font-size:10px;color:var(--muted);margin-top:8px}
+.flinks{display:flex;gap:52px;flex-wrap:wrap}
+.fc h4{font-size:8px;letter-spacing:0.24em;text-transform:uppercase;color:var(--blue2);margin-bottom:14px;font-weight:700}
+.fc a{display:block;font-size:11px;color:var(--muted);text-decoration:none;margin-bottom:8px;transition:color 0.2s}
+.fc a:hover{color:var(--white)}
+.fb{display:flex;justify-content:space-between;align-items:center;padding-top:26px;border-top:1px solid var(--border);font-size:10px;color:var(--muted);flex-wrap:wrap;gap:10px}
+
+/* MOBILE */
+@media(max-width:820px){
+  nav{padding:18px 22px}
+  .nav-links{display:none}
+  section{padding:70px 22px}
+  .hero{padding:110px 22px 72px}
+  .h-stats{display:none}
+  .svc-grid,.pg,.pr-grid,.rev-grid{grid-template-columns:1fr}
+  .ptrs-head,.faq-wrap{flex-direction:column;gap:24px}
+  .ft,.flinks{flex-direction:column;gap:24px}
+  .fb{flex-direction:column;text-align:center}
+  .cta{padding:72px 22px}
+  footer{padding:48px 22px 30px}
+  .tp-header{flex-direction:column;align-items:flex-start}
+  .tp-badge{margin-left:0}
+}
+
+/* FADE */
+.fade{opacity:0;transform:translateY(18px);transition:opacity 0.55s ease,transform 0.55s ease}
+.fade.in{opacity:1;transform:none}
+.fade:nth-child(2){transition-delay:.07s}
+.fade:nth-child(3){transition-delay:.14s}
+.fade:nth-child(4){transition-delay:.21s}
+.fade:nth-child(5){transition-delay:.28s}
+.fade:nth-child(6){transition-delay:.35s}
+@media(prefers-reduced-motion:reduce){.fade{opacity:1;transform:none}.tk{animation:none}}
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a href="#" class="logo"><div class="logo-dot"></div>Access Life Concierge</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#partners">Partners</a></li>
+    <li><a href="#process">How It Works</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#contact" class="nav-btn">Request Access</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="h-label">Private Concierge Service</div>
+  <h1>Private Bookings for<br><i>Stays, Flights</i><br>& Events</h1>
+  <p class="h-sub">Luxury resorts, private jets, VIP tables, and last-minute tickets to sold-out events — we handle every detail, worldwide.</p>
+  <div class="h-actions">
+    <a href="#contact" class="btn">Request Access</a>
+    <a href="#services" class="btn-text">Our Services</a>
+  </div>
+  <div class="h-stats">
+    <div class="stat"><div class="stat-n">180+</div><div class="stat-l">Destinations</div></div>
+    <div class="stat"><div class="stat-n">24/7</div><div class="stat-l">Available</div></div>
+    <div class="stat"><div class="stat-n">4.9★</div><div class="stat-l">Trustpilot</div></div>
+  </div>
+</div>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="tk">
+    <span class="ti">Four Seasons <span class="td">●</span></span>
+    <span class="ti">Mandarin Oriental <span class="td">●</span></span>
+    <span class="ti">St. Regis <span class="td">●</span></span>
+    <span class="ti">Nikki Beach <span class="td">●</span></span>
+    <span class="ti">Lío Ibiza <span class="td">●</span></span>
+    <span class="ti">Lío Mykonos <span class="td">●</span></span>
+    <span class="ti">Pacha Group <span class="td">●</span></span>
+    <span class="ti">Bagatelle Group <span class="td">●</span></span>
+    <span class="ti">Scorpios Mykonos <span class="td">●</span></span>
+    <span class="ti">VistaJet <span class="td">●</span></span>
+    <span class="ti">GlobeAir <span class="td">●</span></span>
+    <span class="ti">Four Seasons <span class="td">●</span></span>
+    <span class="ti">Mandarin Oriental <span class="td">●</span></span>
+    <span class="ti">St. Regis <span class="td">●</span></span>
+    <span class="ti">Nikki Beach <span class="td">●</span></span>
+    <span class="ti">Lío Ibiza <span class="td">●</span></span>
+    <span class="ti">Lío Mykonos <span class="td">●</span></span>
+    <span class="ti">Pacha Group <span class="td">●</span></span>
+    <span class="ti">Bagatelle Group <span class="td">●</span></span>
+    <span class="ti">Scorpios Mykonos <span class="td">●</span></span>
+    <span class="ti">VistaJet <span class="td">●</span></span>
+    <span class="ti">GlobeAir <span class="td">●</span></span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="tag">What We Offer</div>
+  <h2>Concierge Booking for <i>Travel,</i><br><i>Events & Lifestyle</i></h2>
+  <p class="lead">Tailored services for discerning clients who value comfort, time, and access to extraordinary experiences.</p>
+  <div class="svc-grid">
+    <div class="sc fade"><div class="sc-n">01</div><div class="sc-ico">🏨</div><div class="sc-t">Hotels & Resorts</div><div class="sc-d">Exclusive stays and luxury resorts worldwide — from urban flagships to private villas on untouched coastlines.</div><div class="sc-arrow">Enquire →</div></div>
+    <div class="sc fade"><div class="sc-n">02</div><div class="sc-ico">✈️</div><div class="sc-t">Private Jets & Transfers</div><div class="sc-d">Private flights and luxury ground transfers arranged on your terms — flexible, discreet, and seamless.</div><div class="sc-arrow">Enquire →</div></div>
+    <div class="sc fade"><div class="sc-n">03</div><div class="sc-ico">🌊</div><div class="sc-t">Clubs & Nightlife</div><div class="sc-d">VIP access to the most sought-after beach clubs and nightlife venues from Ibiza to Dubai.</div><div class="sc-arrow">Enquire →</div></div>
+    <div class="sc fade"><div class="sc-n">04</div><div class="sc-ico">🍽️</div><div class="sc-t">Restaurants & Dining</div><div class="sc-d">Table reservations at the world's most coveted restaurants — including fully booked and hard-to-reach addresses.</div><div class="sc-arrow">Enquire →</div></div>
+    <div class="sc fade"><div class="sc-n">05</div><div class="sc-ico">🎭</div><div class="sc-t">VIP Events & Tickets</div><div class="sc-d">Last-minute tickets to sold-out events, premieres, and sporting occasions — including backstage and VIP access.</div><div class="sc-arrow">Enquire →</div></div>
+    <div class="sc fade"><div class="sc-n">06</div><div class="sc-ico">💎</div><div class="sc-t">Bespoke Experiences</div><div class="sc-d">Private yachts, curated itineraries, personal shopping — experiences well beyond the ordinary.</div><div class="sc-arrow">Enquire →</div></div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="ptrs-bg" id="partners">
+  <div class="ptrs-head">
+    <div>
+      <div class="tag">Exclusive Access</div>
+      <h2>Our Global <i>Partner Network</i></h2>
+    </div>
+    <p class="ptrs-note">Long-standing partnerships give our clients access that is simply not available to the public.</p>
+  </div>
+  <div class="pg">
+    <div class="pt fade"><div class="pt-cat">Hotels</div><div class="pt-name">Four Seasons Hotels & Resorts</div><div class="pt-bar"></div></div>
+    <div class="pt fade"><div class="pt-cat">Hotels</div><div class="pt-name">Mandarin Oriental</div><div class="pt-bar"></div></div>
+    <div class="pt fade"><div class="pt-cat">Hotels</div><div class="pt-name">St. Regis</div><div class="pt-bar"></div></div>
+    <div class="pt fade"><div class="pt-cat">Beach Club</div><div class="pt-name">Nikki Beach</div><div class="pt-bar"></div></div>
+    <div class="pt fade"><div class="pt-cat">Club</div><div class="pt-name">Lío Ibiza</div><div class="pt-bar"></div></div>
+    <div class="pt fade"><div class="pt-cat">Club</div><div class="pt-name">Lío Mykonos</div><div class="pt-bar"></div></div>
+    <div class="pt fade"><div class="pt-cat">Nightlife</div><div class="pt-name">Pacha Group</div><div class="pt-bar"></div></div>
+    <div class="pt fade"><div class="pt-cat">Restaurant & Club</div><div class="pt-name">Bagatelle Group</div><div class="pt-bar"></div></div>
+    <div class="pt fade"><div class="pt-cat">Beach Club</div><div class="pt-name">Scorpios Mykonos</div><div class="pt-bar"></div></div>
+    <div class="pt fade"><div class="pt-cat">Private Aviation</div><div class="pt-name">VistaJet</div><div class="pt-bar"></div></div>
+    <div class="pt fade"><div class="pt-cat">Private Aviation</div><div class="pt-name">GlobeAir</div><div class="pt-bar"></div></div>
+    <div class="pt fade" style="background:var(--blue-a);border:1px solid var(--border-b)"><div class="pt-cat">And many more</div><div class="pt-name" style="color:var(--muted)">500+ partners worldwide</div><div class="pt-bar" style="opacity:1"></div></div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="tag">How It Works</div>
+  <h2>Three steps to your <i>perfect experience</i></h2>
+  <div class="pr-grid">
+    <div class="pr fade"><div class="pr-n">01 — Request</div><div class="pr-t">Tell us what you want</div><div class="pr-d">Share your travel dates, destination, and any special requests — by message, call, or email. Nothing is too specific.</div></div>
+    <div class="pr fade"><div class="pr-n">02 — We handle it</div><div class="pr-t">We arrange everything</div><div class="pr-d">Our team sources the best options and takes care of all bookings, confirmations, and coordination — quietly and efficiently.</div></div>
+    <div class="pr fade"><div class="pr-n">03 — Enjoy</div><div class="pr-t">Experience the extraordinary</div><div class="pr-d">Sit back and enjoy a flawlessly organised trip or event. We remain available throughout your stay.</div></div>
+  </div>
+</section>
+
+<!-- REVIEWS (Trustpilot-style) -->
+<section class="rev-bg" id="reviews">
+  <div class="tag">Reviews</div>
+  <h2>What our clients <i>say</i></h2>
+
+  <div class="tp-header">
+    <div class="tp-logo">
+      <div class="tp-wordmark">Trust<span>pilot</span></div>
+    </div>
+    <div class="tp-score-block">
+      <div class="tp-score-num">4.9</div>
+      <div class="tp-score-info">
+        <div class="tp-stars">
+          <div class="tp-star">★</div>
+          <div class="tp-star">★</div>
+          <div class="tp-star">★</div>
+          <div class="tp-star">★</div>
+          <div class="tp-star">★</div>
+        </div>
+        <div class="tp-label">Excellent</div>
+        <div class="tp-count">Based on 214 reviews</div>
+      </div>
+    </div>
+    <div class="tp-badge">
+      <div class="tp-badge-star" style="color:#00b67a;font-size:18px">★★★★★</div>
+      <div class="tp-badge-label">Verified on Trustpilot</div>
+    </div>
+  </div>
+
+  <div class="rev-grid">
+    <div class="rc fade">
+      <div class="rc-top">
+        <div class="rc-stars"><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div></div>
+        <div class="rc-verified">✓ Verified</div>
+      </div>
+      <div class="rc-q">"Within 24 hours we had a table at Scorpios, a suite at the Four Seasons, and a transfer arranged. Absolutely exceptional."</div>
+      <div class="rc-author">
+        <div class="rc-av">MK</div>
+        <div><div class="rc-name">Marcus K.</div><div class="rc-info">Entrepreneur, Munich</div></div>
+        <div class="rc-date">2 weeks ago</div>
+      </div>
+    </div>
+    <div class="rc fade">
+      <div class="rc-top">
+        <div class="rc-stars"><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div></div>
+        <div class="rc-verified">✓ Verified</div>
+      </div>
+      <div class="rc-q">"I needed tickets to a sold-out event — two hours later they were in my hands. Fast, discreet, and totally professional."</div>
+      <div class="rc-author">
+        <div class="rc-av">SR</div>
+        <div><div class="rc-name">Sophia R.</div><div class="rc-info">CEO, Zurich</div></div>
+        <div class="rc-date">1 month ago</div>
+      </div>
+    </div>
+    <div class="rc fade">
+      <div class="rc-top">
+        <div class="rc-stars"><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div></div>
+        <div class="rc-verified">✓ Verified</div>
+      </div>
+      <div class="rc-q">"The private jet was arranged exactly to spec, and the hotel suite exceeded every expectation. They think ahead so you don't have to."</div>
+      <div class="rc-author">
+        <div class="rc-av">AV</div>
+        <div><div class="rc-name">Alexander V.</div><div class="rc-info">Investor, Dubai</div></div>
+        <div class="rc-date">3 weeks ago</div>
+      </div>
+    </div>
+    <div class="rc fade">
+      <div class="rc-top">
+        <div class="rc-stars"><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div></div>
+        <div class="rc-verified">✓ Verified</div>
+      </div>
+      <div class="rc-q">"I've used concierge services before but nothing comes close. They got us into Nikki Beach on the busiest weekend of summer — last minute."</div>
+      <div class="rc-author">
+        <div class="rc-av">JL</div>
+        <div><div class="rc-name">Julia L.</div><div class="rc-info">Director, London</div></div>
+        <div class="rc-date">1 month ago</div>
+      </div>
+    </div>
+    <div class="rc fade">
+      <div class="rc-top">
+        <div class="rc-stars"><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div></div>
+        <div class="rc-verified">✓ Verified</div>
+      </div>
+      <div class="rc-q">"Seamless from start to finish. Our whole Mykonos trip — hotel, transfers, clubs, dinners — handled in one conversation. Worth every cent."</div>
+      <div class="rc-author">
+        <div class="rc-av">TP</div>
+        <div><div class="rc-name">Thomas P.</div><div class="rc-info">Finance, Frankfurt</div></div>
+        <div class="rc-date">2 months ago</div>
+      </div>
+    </div>
+    <div class="rc fade">
+      <div class="rc-top">
+        <div class="rc-stars"><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div></div>
+        <div class="rc-verified">✓ Verified</div>
+      </div>
+      <div class="rc-q">"Discreet, responsive, and genuinely well-connected. They arranged access to places I didn't think were possible to book. Remarkable service."</div>
+      <div class="rc-author">
+        <div class="rc-av">NB</div>
+        <div><div class="rc-name">Nina B.</div><div class="rc-info">Entrepreneur, Vienna</div></div>
+        <div class="rc-date">6 weeks ago</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="faq-wrap">
+    <div>
+      <div class="tag">FAQ</div>
+      <h2>Common <i>questions</i></h2>
+      <p class="lead" style="margin-bottom:36px">More questions? We respond within hours — including weekends and public holidays.</p>
+      <a href="#contact" class="btn">Get in Touch</a>
+    </div>
+    <div class="faq-list">
+      <div class="fi" onclick="faq(this)"><div class="fi-q">What can I book through Access Life?<div class="fi-plus">+</div></div><div class="fi-a">Hotels, private jets, VIP tables, restaurants, beach clubs, event tickets, and bespoke travel experiences — our network covers virtually any request.</div></div>
+      <div class="fi" onclick="faq(this)"><div class="fi-q">Are last-minute requests possible?<div class="fi-plus">+</div></div><div class="fi-a">Yes — last-minute and short-notice bookings are one of our specialities. Our partnerships unlock options that are simply not publicly available.</div></div>
+      <div class="fi" onclick="faq(this)"><div class="fi-q">Do you operate worldwide?<div class="fi-plus">+</div></div><div class="fi-a">Yes. Our international network spans Europe, the Middle East, Asia, the Americas, and beyond.</div></div>
+      <div class="fi" onclick="faq(this)"><div class="fi-q">How discreet is the service?<div class="fi-plus">+</div></div><div class="fi-a">Absolute discretion is a core principle. All client information is kept strictly confidential and is never shared with third parties.</div></div>
+      <div class="fi" onclick="faq(this)"><div class="fi-q">How do I get started?<div class="fi-plus">+</div></div><div class="fi-a">Reach out by email, phone, or via the contact form. We typically respond within a few hours, even on weekends and bank holidays.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="contact">
+  <div class="tag">Ready?</div>
+  <h2>Your next extraordinary <i>experience starts here</i></h2>
+  <div class="cta-line"></div>
+  <p class="lead">Tell us what you have in mind — we'll take care of the rest. Discreet, efficient, and always available.</p>
+  <a href="mailto:hello@accesslifeconcierge.com" class="btn" style="font-size:10px;padding:15px 46px">Request Access</a>
+  <p style="font-size:11px;color:var(--muted);margin-top:18px;letter-spacing:0.06em">hello@accesslifeconcierge.com · Available 24/7</p>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft">
+    <div>
+      <div class="f-brand"><div class="logo-dot"></div>Access Life Concierge</div>
+      <div class="f-sub">Private Concierge Service · Worldwide</div>
+    </div>
+    <div class="flinks">
+      <div class="fc"><h4>Services</h4><a href="#services">Hotels & Resorts</a><a href="#services">Private Jets</a><a href="#services">Clubs & Nightlife</a><a href="#services">Restaurants</a><a href="#services">VIP Events</a></div>
+      <div class="fc"><h4>Partners</h4><a href="#partners">Four Seasons</a><a href="#partners">Mandarin Oriental</a><a href="#partners">VistaJet</a><a href="#partners">Nikki Beach</a></div>
+      <div class="fc"><h4>Contact</h4><a href="mailto:hello@accesslifeconcierge.com">Email Us</a><a href="#contact">Send Request</a><a href="#faq">FAQ</a></div>
+    </div>
+  </div>
+  <div class="fb">
+    <span>© 2025 Access Life Concierge. All rights reserved.</span>
+    <span style="color:var(--blue2);font-size:8px;letter-spacing:0.22em;text-transform:uppercase">Exclusive · Discreet · Worldwide</span>
+  </div>
+</footer>
+
+<script>
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('sc',scrollY>50));
+function faq(el){const o=el.classList.contains('open');document.querySelectorAll('.fi').forEach(i=>i.classList.remove('open'));if(!o)el.classList.add('open')}
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('in')}),{threshold:0.07});
+document.querySelectorAll('.fade').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
