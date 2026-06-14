@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Access Life Concierge — Private Bookings for Stays, Flights & Events</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Newsreader:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060810;--bg2:#0a0e1c;--bg3:#0f1323;--bg4:#141829;
+  --blue:#2557f7;--blue2:#4d79ff;--blue3:rgba(37,87,247,0.12);--blue4:rgba(37,87,247,0.22);
+  --white:#fff;--off:#cdd5e8;--muted:#4e5870;--muted2:#6b7b9a;
+  --border:rgba(255,255,255,0.06);--border2:rgba(37,87,247,0.20);
+  --green:#00b67a;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--white);font-family:'Syne',sans-serif;font-weight:400;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+
+/* ── NAV ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:22px 60px;transition:background .3s,border-color .3s}
+nav.sc{background:rgba(6,8,16,.96);border-bottom:1px solid var(--border)}
+.n-logo{display:flex;align-items:center;gap:9px;text-decoration:none;color:var(--white)}
+.n-logo-mark{width:28px;height:28px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;letter-spacing:-.02em;border-radius:4px;flex-shrink:0}
+.n-logo-text{font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase}
+.n-links{display:flex;gap:36px;list-style:none}
+.n-links a{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);text-decoration:none;transition:color .2s}
+.n-links a:hover{color:var(--white)}
+.n-cta{font-size:10px;letter-spacing:.16em;text-transform:uppercase;border:1px solid var(--border2);color:var(--blue2);padding:10px 22px;text-decoration:none;border-radius:3px;transition:all .2s}
+.n-cta:hover{background:var(--blue);color:var(--white);border-color:var(--blue)}
+.n-burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px}
+.n-burger span{width:22px;height:1.5px;background:var(--white);display:block;transition:all .3s}
+.n-burger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
+.n-burger.open span:nth-child(2){opacity:0}
+.n-burger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
+.mob-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:var(--bg);z-index:190;flex-direction:column;justify-content:center;align-items:center;gap:32px}
+.mob-menu.open{display:flex}
+.mob-menu a{font-size:28px;font-weight:600;color:var(--white);text-decoration:none;letter-spacing:-.01em;transition:color .2s}
+.mob-menu a:hover{color:var(--blue2)}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:140px 60px 100px;position:relative;z-index:2}
+.hero-right{position:relative;overflow:hidden}
+.hero-img{width:100%;height:100%;object-fit:cover;opacity:.55;transition:transform 8s ease}
+.hero-img:hover{transform:scale(1.04)}
+.hero-right::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,var(--bg) 0%,transparent 40%)}
+
+.h-tag{font-size:9px;letter-spacing:.3em;text-transform:uppercase;color:var(--blue2);margin-bottom:36px;display:flex;align-items:center;gap:12px}
+.h-tag::before{content:'';width:20px;height:1px;background:var(--blue2)}
+
+h1.big{font-family:'Newsreader',serif;font-size:clamp(52px,5.8vw,90px);font-weight:300;line-height:1.01;letter-spacing:-.025em;margin-bottom:32px}
+h1.big i{font-style:italic;color:var(--blue2)}
+
+.h-sub{font-size:14px;color:var(--muted2);line-height:1.85;max-width:400px;margin-bottom:48px;font-weight:400}
+.h-row{display:flex;align-items:center;gap:32px;flex-wrap:wrap}
+
+.btn-fill{font-size:10px;letter-spacing:.18em;text-transform:uppercase;background:var(--blue);color:var(--white);padding:14px 38px;text-decoration:none;border-radius:3px;transition:background .2s,transform .2s;display:inline-block}
+.btn-fill:hover{background:var(--blue2);transform:translateY(-1px)}
+.btn-line{font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:var(--muted2);text-decoration:none;display:flex;align-items:center;gap:8px;transition:color .2s}
+.btn-line:hover{color:var(--white)}
+.btn-line::after{content:'→';font-size:15px;transition:transform .2s}
+.btn-line:hover::after{transform:translateX(4px)}
+
+.h-cards{position:absolute;bottom:40px;left:60px;display:flex;gap:12px}
+.h-pill{background:rgba(10,14,28,.85);backdrop-filter:blur(12px);border:1px solid var(--border2);padding:14px 20px;border-radius:6px}
+.h-pill-n{font-family:'Newsreader',serif;font-size:24px;font-weight:300;line-height:1;color:var(--white)}
+.h-pill-l{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted2);margin-top:4px}
+
+/* ── TICKER ── */
+.ticker{overflow:hidden;border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:0;background:var(--bg2);height:48px;display:flex;align-items:center}
+.tk-wrap{display:flex;animation:tkr 32s linear infinite;white-space:nowrap}
+.ticker:hover .tk-wrap{animation-play-state:paused}
+.ti{display:inline-flex;align-items:center;gap:18px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);padding:0 32px;flex-shrink:0;transition:color .2s;cursor:default}
+.ti:hover{color:var(--blue2)}
+.td{color:var(--blue);font-size:4px}
+@keyframes tkr{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── SECTION BASE ── */
+.sec{padding:110px 60px}
+.sec-sm{padding:80px 60px}
+.s-tag{font-size:9px;letter-spacing:.28em;text-transform:uppercase;color:var(--blue2);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.s-tag::before{content:'';width:14px;height:1px;background:var(--blue2)}
+h2.sec-h{font-family:'Newsreader',serif;font-size:clamp(34px,3.8vw,58px);font-weight:300;line-height:1.07;letter-spacing:-.02em;margin-bottom:14px}
+h2.sec-h i{font-style:italic;color:var(--blue2)}
+.sec-sub{font-size:13px;color:var(--muted2);line-height:1.9;max-width:400px;margin-bottom:56px}
+
+/* ── SERVICES ── */
+.svc-bg{background:var(--bg)}
+.svc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:52px;border:1px solid var(--border)}
+.svc-card{background:var(--bg);padding:44px 36px;position:relative;overflow:hidden;cursor:pointer;border-bottom:2px solid transparent;transition:background .25s,border-color .25s}
+.svc-card:hover{background:var(--bg2);border-bottom-color:var(--blue)}
+.svc-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--blue2),transparent);opacity:0;transition:opacity .3s}
+.svc-card:hover::before{opacity:1}
+.svc-num{font-family:'Newsreader',serif;font-size:48px;font-weight:300;color:rgba(37,87,247,.07);line-height:1;margin-bottom:24px;transition:color .25s}
+.svc-card:hover .svc-num{color:rgba(37,87,247,.15)}
+.svc-ico{width:40px;height:40px;border:1px solid var(--border2);background:var(--blue3);display:flex;align-items:center;justify-content:center;font-size:16px;margin-bottom:18px;border-radius:4px;transition:background .25s,transform .25s}
+.svc-card:hover .svc-ico{background:var(--blue4);transform:scale(1.08)}
+.svc-title{font-size:16px;font-weight:600;margin-bottom:10px;letter-spacing:-.01em;transition:color .2s}
+.svc-card:hover .svc-title{color:var(--blue2)}
+.svc-desc{font-size:12px;color:var(--muted2);line-height:1.85;font-weight:400}
+.svc-more{margin-top:24px;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--blue2);opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s;display:inline-flex;align-items:center;gap:6px}
+.svc-card:hover .svc-more{opacity:1;transform:none}
+
+/* ── GALLERY ── */
+.gallery-bg{background:var(--bg2)}
+.gallery-grid{display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:280px 280px;gap:8px;margin-top:52px}
+.g-item{position:relative;overflow:hidden;border-radius:4px;cursor:pointer}
+.g-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease,filter .4s}
+.g-item:hover img{transform:scale(1.07);filter:brightness(.75)}
+.g-item::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(6,8,16,.6) 0%,transparent 60%);opacity:0;transition:opacity .3s}
+.g-item:hover::after{opacity:1}
+.g-label{position:absolute;bottom:16px;left:16px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--white);opacity:0;transform:translateY(6px);transition:all .3s;z-index:2}
+.g-item:hover .g-label{opacity:1;transform:none}
+.g1{grid-column:1/6;grid-row:1/2}
+.g2{grid-column:6/9;grid-row:1/2}
+.g3{grid-column:9/13;grid-row:1/2}
+.g4{grid-column:1/4;grid-row:2/3}
+.g5{grid-column:4/9;grid-row:2/3}
+.g6{grid-column:9/13;grid-row:2/3}
+
+/* ── PARTNERS ── */
+.ptr-bg{background:var(--bg)}
+.ptrs-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:52px;flex-wrap:wrap;gap:24px}
+.ptrs-note{font-size:12px;color:var(--muted2);max-width:240px;line-height:1.75}
+.ptr-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+.ptr{background:var(--bg);padding:28px 24px;display:flex;flex-direction:column;gap:14px;min-height:140px;border:1px solid transparent;transition:background .2s,border-color .2s,transform .2s;cursor:default;position:relative;overflow:hidden}
+.ptr::after{content:'';position:absolute;bottom:0;left:0;width:0;height:2px;background:var(--blue);transition:width .35s ease}
+.ptr:hover{background:var(--bg3);border-color:var(--border2)}
+.ptr:hover::after{width:100%}
+.ptr-cat{font-size:8px;letter-spacing:.22em;text-transform:uppercase;color:var(--blue2);opacity:.7}
+.ptr-logo{display:flex;align-items:center;height:36px}
+.ptr-logo svg{height:100%;width:auto;max-width:140px}
+.ptr-name-text{font-family:'Newsreader',serif;font-size:17px;font-weight:300;color:var(--white);line-height:1.2}
+
+/* ── PROCESS ── */
+.proc-bg{background:var(--bg2)}
+.proc-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);margin-top:52px;border:1px solid var(--border)}
+.proc-step{background:var(--bg2);padding:44px 36px;border-top:1px solid var(--border2);position:relative;transition:background .2s}
+.proc-step::after{content:'';position:absolute;top:-1px;left:0;width:0;height:2px;background:var(--blue);transition:width .45s ease}
+.proc-step:hover{background:var(--bg3)}
+.proc-step:hover::after{width:100%}
+.proc-num{font-size:9px;letter-spacing:.2em;color:var(--blue2);margin-bottom:20px}
+.proc-t{font-family:'Newsreader',serif;font-size:22px;font-weight:300;margin-bottom:12px}
+.proc-d{font-size:12px;color:var(--muted2);line-height:1.85}
+
+/* ── REVIEWS (Trustpilot) ── */
+.rev-bg{background:var(--bg)}
+.tp-bar{display:flex;align-items:center;gap:28px;padding:28px 36px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;margin-bottom:48px;flex-wrap:wrap}
+.tp-logo-wrap{display:flex;align-items:center;gap:8px}
+.tp-star-logo{display:flex;gap:3px}
+.tp-sbox{width:20px;height:20px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;border-radius:2px}
+.tp-word{font-size:16px;font-weight:600;color:var(--white);letter-spacing:-.02em}
+.tp-word span{color:var(--green)}
+.tp-divider{width:1px;height:36px;background:var(--border);flex-shrink:0}
+.tp-score-big{font-family:'Newsreader',serif;font-size:44px;font-weight:300;line-height:1;color:var(--white)}
+.tp-right{display:flex;flex-direction:column;gap:4px}
+.tp-stars-row{display:flex;gap:3px}
+.tp-sstar{width:18px;height:18px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;border-radius:2px}
+.tp-excellent{font-size:12px;font-weight:600;color:var(--white)}
+.tp-count{font-size:10px;color:var(--muted2)}
+.tp-badge-pill{margin-left:auto;display:flex;align-items:center;gap:8px;border:1px solid rgba(0,182,122,.25);padding:10px 16px;border-radius:4px}
+.tp-badge-pill .tp-sstar{width:14px;height:14px;font-size:8px}
+.tp-badge-text{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--green)}
+
+.rev-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+.rc{background:var(--bg);padding:36px 30px;border:1px solid transparent;transition:border-color .2s,background .2s;position:relative;overflow:hidden}
+.rc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),transparent);opacity:0;transition:opacity .3s}
+.rc:hover{background:var(--bg2);border-color:rgba(0,182,122,.18)}
+.rc:hover::before{opacity:1}
+.rc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.rc-stars{display:flex;gap:2px}
+.rc-star{width:16px;height:16px;background:var(--green);display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;border-radius:2px}
+.rc-v{font-size:8px;letter-spacing:.15em;text-transform:uppercase;color:var(--green);display:flex;align-items:center;gap:4px}
+.rc-quote{font-family:'Newsreader',serif;font-style:italic;font-size:17px;font-weight:300;line-height:1.55;color:var(--off);margin-bottom:22px}
+.rc-footer{display:flex;align-items:center;gap:12px;padding-top:18px;border-top:1px solid var(--border)}
+.rc-av{width:34px;height:34px;border-radius:50%;background:var(--blue3);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--blue2);flex-shrink:0}
+.rc-name{font-size:12px;font-weight:600;color:var(--white)}
+.rc-loc{font-size:10px;color:var(--muted2);margin-top:1px}
+.rc-date{font-size:9px;color:var(--muted);margin-left:auto}
+
+/* ── FAQ ── */
+.faq-bg{background:var(--bg2)}
+.faq-wrap{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+.faq-list{}
+.faq-item{border-top:1px solid var(--border);cursor:pointer}
+.faq-item:last-child{border-bottom:1px solid var(--border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:20px 0;font-size:14px;font-weight:500;color:var(--white);transition:color .2s;gap:16px}
+.faq-item:hover .faq-q{color:var(--blue2)}
+.faq-plus{width:24px;height:24px;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--blue2);flex-shrink:0;border-radius:3px;transition:transform .22s,background .2s}
+.faq-item.open .faq-plus{transform:rotate(45deg);background:var(--blue3)}
+.faq-a{font-size:12px;color:var(--muted2);line-height:1.9;max-height:0;overflow:hidden;transition:max-height .35s,padding .22s}
+.faq-item.open .faq-a{max-height:180px;padding-bottom:20px}
+
+/* ── CTA ── */
+.cta-bg{background:var(--bg3);position:relative;overflow:hidden}
+.cta-bg::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 60% at 50% -10%,rgba(37,87,247,.13) 0%,transparent 65%);pointer-events:none}
+.cta-inner{padding:110px 60px;text-align:center;position:relative;z-index:1}
+.cta-inner .s-tag{justify-content:center}
+.cta-inner h2.sec-h{max-width:580px;margin:0 auto 18px}
+.cta-inner .sec-sub{margin:0 auto 44px;text-align:center;max-width:360px}
+.cta-line{width:28px;height:1px;background:var(--blue);margin:0 auto 36px;opacity:.5}
+.cta-email{font-size:11px;color:var(--muted2);margin-top:16px;letter-spacing:.06em}
+
+/* ── FOOTER ── */
+footer{background:var(--bg);padding:60px 60px 36px;border-top:1px solid var(--border)}
+.ft-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;flex-wrap:wrap;gap:36px}
+.ft-brand{display:flex;align-items:center;gap:9px}
+.ft-brand-text{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.ft-tagline{font-size:10px;color:var(--muted);margin-top:8px;letter-spacing:.06em}
+.ft-links{display:flex;gap:52px;flex-wrap:wrap}
+.fc h4{font-size:8px;letter-spacing:.24em;text-transform:uppercase;color:var(--blue2);margin-bottom:14px}
+.fc a{display:block;font-size:11px;color:var(--muted2);text-decoration:none;margin-bottom:8px;transition:color .2s;font-weight:400}
+.fc a:hover{color:var(--white)}
+.ft-bot{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid var(--border);font-size:10px;color:var(--muted);flex-wrap:wrap;gap:10px}
+
+/* ── MOBILE ── */
+@media(max-width:1024px){
+  .svc-grid{grid-template-columns:repeat(2,1fr)}
+  .ptr-grid{grid-template-columns:repeat(2,1fr)}
+  .gallery-grid{grid-template-columns:1fr 1fr;grid-template-rows:auto;gap:6px}
+  .g1,.g2,.g3,.g4,.g5,.g6{grid-column:auto;grid-row:auto;height:220px}
+}
+@media(max-width:768px){
+  nav{padding:18px 22px}
+  .n-links,.n-cta{display:none}
+  .n-burger{display:flex}
+  .sec,.sec-sm{padding:72px 22px}
+  .hero{grid-template-columns:1fr;min-height:auto}
+  .hero-left{padding:120px 22px 60px}
+  .hero-right{height:260px}
+  .hero-right::after{background:linear-gradient(to top,var(--bg) 0%,transparent 40%)}
+  .h-cards{left:22px;bottom:24px}
+  .h-pill{padding:10px 14px}
+  .svc-grid{grid-template-columns:1fr}
+  .ptr-grid{grid-template-columns:1fr 1fr}
+  .proc-steps{grid-template-columns:1fr}
+  .rev-grid{grid-template-columns:1fr}
+  .faq-wrap{grid-template-columns:1fr;gap:36px}
+  .gallery-grid{grid-template-columns:1fr;grid-template-rows:auto;gap:6px}
+  .g1,.g2,.g3,.g4,.g5,.g6{grid-column:auto;grid-row:auto;height:200px}
+  .ptrs-head{flex-direction:column;gap:16px}
+  .ft-top,.ft-links{flex-direction:column;gap:24px}
+  .ft-bot{flex-direction:column;text-align:center}
+  .tp-bar{flex-direction:column;align-items:flex-start;gap:16px}
+  .tp-badge-pill{margin-left:0}
+  .cta-inner{padding:72px 22px}
+  footer{padding:52px 22px 32px}
+}
+@media(max-width:480px){
+  .ptr-grid{grid-template-columns:1fr}
+}
+
+/* ── ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.reveal.in{opacity:1;transform:none}
+.reveal:nth-child(2){transition-delay:.08s}
+.reveal:nth-child(3){transition-delay:.16s}
+.reveal:nth-child(4){transition-delay:.24s}
+.reveal:nth-child(5){transition-delay:.32s}
+.reveal:nth-child(6){transition-delay:.40s}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}.tk-wrap{animation:none}}
+
+/* cursor dot */
+.cursor{width:8px;height:8px;border-radius:50%;background:var(--blue);position:fixed;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform .1s,width .25s,height .25s,background .25s;mix-blend-mode:screen}
+.cursor-ring{width:32px;height:32px;border-radius:50%;border:1px solid rgba(37,87,247,.5);position:fixed;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .18s ease,width .3s,height .3s,border-color .3s}
+@media(pointer:coarse){.cursor,.cursor-ring{display:none}}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cur"></div>
+<div class="cursor-ring" id="ring"></div>
+
+<!-- MOBILE MENU -->
+<div class="mob-menu" id="mob">
+  <div style="position:absolute;top:24px;left:22px;display:flex;align-items:center;gap:10px">
+    <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" style="height:32px;width:32px;flex-shrink:0">
+      <rect fill="#1a1f3a" x="88.71" y="88.71" width="822.58" height="822.58" rx="109.9" ry="109.9"/>
+      <path fill="#fff" d="M500.42,271.36l57.66,98.63-35.87,67.85-21.8-34.23-188.91,325.03h0c-33.84,0-54.96-36.66-37.99-65.93l226.9-391.35Z"/>
+      <path fill="#fff" d="M649.24,271.36h0c34.2,0,55.57,37.03,38.46,66.64l-187.28,324.14h225.78c17.46,29.32-3.67,66.5-37.8,66.5h-303.67l264.51-457.28Z"/>
+    </svg>
+    <span style="font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--white)">Access Life</span>
+  </div>
+  <a href="#services" onclick="closeMob()">Services</a>
+  <a href="#partners" onclick="closeMob()">Partners</a>
+  <a href="#process" onclick="closeMob()">How It Works</a>
+  <a href="#reviews" onclick="closeMob()">Reviews</a>
+  <a href="#faq" onclick="closeMob()">FAQ</a>
+  <a href="contact.html" onclick="closeMob()" style="color:var(--blue2)">Request Access →</a>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="n-logo">
+    <svg class="logo-svg" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:36px;flex-shrink:0">
+  <rect fill="#1a1f3a" x="88.71" y="88.71" width="822.58" height="822.58" rx="109.9" ry="109.9"/>
+  <path fill="#fff" d="M500.42,271.36l57.66,98.63-35.87,67.85-21.8-34.23-188.91,325.03h0c-33.84,0-54.96-36.66-37.99-65.93l226.9-391.35Z"/>
+  <path fill="#fff" d="M649.24,271.36h0c34.2,0,55.57,37.03,38.46,66.64l-187.28,324.14h225.78c17.46,29.32-3.67,66.5-37.8,66.5h-303.67l264.51-457.28Z"/>
+</svg>
+    <span class="n-logo-text">Access Life</span>
+  </a>
+  <ul class="n-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#partners">Partners</a></li>
+    <li><a href="#process">How It Works</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="contact.html" class="n-cta">Request Access</a>
+  <div class="n-burger" id="burger" onclick="toggleMob()">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home" style="padding:0">
+  <div class="hero-left">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:48px">
+      <svg viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" style="height:48px;width:48px;flex-shrink:0">
+        <rect fill="rgba(26,31,58,0.8)" x="88.71" y="88.71" width="822.58" height="822.58" rx="109.9" ry="109.9"/>
+        <path fill="#fff" d="M500.42,271.36l57.66,98.63-35.87,67.85-21.8-34.23-188.91,325.03h0c-33.84,0-54.96-36.66-37.99-65.93l226.9-391.35Z"/>
+        <path fill="#fff" d="M649.24,271.36h0c34.2,0,55.57,37.03,38.46,66.64l-187.28,324.14h225.78c17.46,29.32-3.67,66.5-37.8,66.5h-303.67l264.51-457.28Z"/>
+      </svg>
+      <div>
+        <div style="font-size:14px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--white)">Access Life Concierge</div>
+        <div style="font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--blue2);margin-top:3px">Private Concierge Service</div>
+      </div>
+    </div>
+    <div class="h-tag">Luxury · Discreet · Worldwide</div>
+    <h1 class="big">Private Bookings<br>for <i>Stays,</i><br><i>Flights & Events</i></h1>
+    <p class="h-sub">Luxury resorts, private jets, VIP tables, and last-minute tickets to sold-out events — we handle every detail, worldwide.</p>
+    <div class="h-row">
+      <a href="contact.html" class="btn-fill">Request Access</a>
+      <a href="#services" class="btn-line">Our Services</a>
+    </div>
+    <div class="h-cards">
+      <div class="h-pill">
+        <div class="h-pill-n">180+</div>
+        <div class="h-pill-l">Destinations</div>
+      </div>
+      <div class="h-pill">
+        <div class="h-pill-n">24/7</div>
+        <div class="h-pill-l">Available</div>
+      </div>
+      <div class="h-pill">
+        <div class="h-pill-n">4.9★</div>
+        <div class="h-pill-l">Trustpilot</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-right">
+    <img class="hero-img" src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=1200&q=80&auto=format&fit=crop" alt="Luxury resort pool at dusk" loading="eager">
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker">
+  <div class="tk-wrap">
+    <span class="ti">Four Seasons<span class="td">●</span></span>
+    <span class="ti">Mandarin Oriental<span class="td">●</span></span>
+    <span class="ti">St. Regis<span class="td">●</span></span>
+    <span class="ti">Nikki Beach<span class="td">●</span></span>
+    <span class="ti">Lío Ibiza<span class="td">●</span></span>
+    <span class="ti">Lío Mykonos<span class="td">●</span></span>
+    <span class="ti">Pacha Group<span class="td">●</span></span>
+    <span class="ti">Bagatelle Group<span class="td">●</span></span>
+    <span class="ti">Scorpios Mykonos<span class="td">●</span></span>
+    <span class="ti">VistaJet<span class="td">●</span></span>
+    <span class="ti">GlobeAir<span class="td">●</span></span>
+    <span class="ti">Four Seasons<span class="td">●</span></span>
+    <span class="ti">Mandarin Oriental<span class="td">●</span></span>
+    <span class="ti">St. Regis<span class="td">●</span></span>
+    <span class="ti">Nikki Beach<span class="td">●</span></span>
+    <span class="ti">Lío Ibiza<span class="td">●</span></span>
+    <span class="ti">Lío Mykonos<span class="td">●</span></span>
+    <span class="ti">Pacha Group<span class="td">●</span></span>
+    <span class="ti">Bagatelle Group<span class="td">●</span></span>
+    <span class="ti">Scorpios Mykonos<span class="td">●</span></span>
+    <span class="ti">VistaJet<span class="td">●</span></span>
+    <span class="ti">GlobeAir<span class="td">●</span></span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="sec svc-bg" id="services">
+  <div class="s-tag">What We Offer</div>
+  <h2 class="sec-h">Concierge Booking for <i>Travel,</i><br><i>Events & Lifestyle</i></h2>
+  <p class="sec-sub">Tailored services for discerning clients who value time and access to extraordinary experiences.</p>
+  <div class="svc-grid">
+    <div class="svc-card reveal">
+      <div class="svc-num">01</div>
+      <div class="svc-ico">🏨</div>
+      <div class="svc-title">Hotels & Resorts</div>
+      <div class="svc-desc">Exclusive stays and luxury resorts worldwide — from urban flagships to private villas on untouched coastlines.</div>
+      <div class="svc-more">Enquire →</div>
+    </div>
+    <div class="svc-card reveal">
+      <div class="svc-num">02</div>
+      <div class="svc-ico">✈️</div>
+      <div class="svc-title">Private Jets & Transfers</div>
+      <div class="svc-desc">Private flights and luxury ground transfers arranged on your terms — flexible, discreet, and seamless.</div>
+      <div class="svc-more">Enquire →</div>
+    </div>
+    <div class="svc-card reveal">
+      <div class="svc-num">03</div>
+      <div class="svc-ico">🌊</div>
+      <div class="svc-title">Clubs & Nightlife</div>
+      <div class="svc-desc">VIP access to the most sought-after beach clubs and nightlife venues, from Ibiza to Dubai.</div>
+      <div class="svc-more">Enquire →</div>
+    </div>
+    <div class="svc-card reveal">
+      <div class="svc-num">04</div>
+      <div class="svc-ico">🍽️</div>
+      <div class="svc-title">Restaurants & Dining</div>
+      <div class="svc-desc">Tables at the world's most coveted restaurants — including fully booked and hard-to-reach addresses.</div>
+      <div class="svc-more">Enquire →</div>
+    </div>
+    <div class="svc-card reveal">
+      <div class="svc-num">05</div>
+      <div class="svc-ico">🎭</div>
+      <div class="svc-title">VIP Events & Tickets</div>
+      <div class="svc-desc">Last-minute tickets to sold-out events, premieres, and sporting occasions with VIP and backstage access.</div>
+      <div class="svc-more">Enquire →</div>
+    </div>
+    <div class="svc-card reveal">
+      <div class="svc-num">06</div>
+      <div class="svc-ico">💎</div>
+      <div class="svc-title">Bespoke Experiences</div>
+      <div class="svc-desc">Private yachts, curated itineraries, personal shopping — experiences well beyond the ordinary.</div>
+      <div class="svc-more">Enquire →</div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="sec-sm gallery-bg" id="gallery">
+  <div class="s-tag">A Glimpse</div>
+  <h2 class="sec-h">Extraordinary <i>places await</i></h2>
+  <div class="gallery-grid">
+    <div class="g-item g1 reveal">
+      <img src="https://images.unsplash.com/photo-1602002418082-a4443e081dd1?w=900&q=80&auto=format&fit=crop" alt="Luxury infinity pool">
+      <div class="g-label">Luxury Resorts</div>
+    </div>
+    <div class="g-item g2 reveal">
+      <img src="https://images.unsplash.com/photo-1540962351504-03099e0a754b?w=600&q=80&auto=format&fit=crop" alt="Private jet interior">
+      <div class="g-label">Private Aviation</div>
+    </div>
+    <div class="g-item g3 reveal">
+      <img src="https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=600&q=80&auto=format&fit=crop" alt="Beach club sunset">
+      <div class="g-label">Beach Clubs</div>
+    </div>
+    <div class="g-item g4 reveal">
+      <img src="https://images.unsplash.com/photo-1559329007-40df8a9345d8?w=500&q=80&auto=format&fit=crop" alt="Fine dining">
+      <div class="g-label">Fine Dining</div>
+    </div>
+    <div class="g-item g5 reveal">
+      <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=80&auto=format&fit=crop" alt="Luxury hotel suite">
+      <div class="g-label">Hotel Suites</div>
+    </div>
+    <div class="g-item g6 reveal">
+      <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=600&q=80&auto=format&fit=crop" alt="Yacht on the ocean">
+      <div class="g-label">Private Yachts</div>
+    </div>
+  </div>
+</section>
+
+<!-- PARTNERS -->
+<section class="sec ptr-bg" id="partners">
+  <div class="ptrs-head">
+    <div>
+      <div class="s-tag">Exclusive Access</div>
+      <h2 class="sec-h">Our Global <i>Partner Network</i></h2>
+    </div>
+    <p class="ptrs-note">Long-standing partnerships give our clients access that is simply not available to the public.</p>
+  </div>
+  <div class="ptr-grid">
+
+    <!-- Four Seasons -->
+    <div class="ptr reveal">
+      <div class="ptr-cat">Luxury Hotels</div>
+      <div class="ptr-logo">
+        <svg viewBox="0 0 200 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="32" font-family="Georgia,serif" font-size="28" fill="white" letter-spacing="1">Four Seasons</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Mandarin Oriental -->
+    <div class="ptr reveal">
+      <div class="ptr-cat">Luxury Hotels</div>
+      <div class="ptr-logo">
+        <svg viewBox="0 0 200 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="32" font-family="Georgia,serif" font-size="22" fill="white" letter-spacing=".5">Mandarin Oriental</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- St. Regis -->
+    <div class="ptr reveal">
+      <div class="ptr-cat">Luxury Hotels</div>
+      <div class="ptr-logo">
+        <svg viewBox="0 0 160 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="32" font-family="Georgia,serif" font-size="28" fill="white" letter-spacing="1">St. Regis</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Nikki Beach -->
+    <div class="ptr reveal">
+      <div class="ptr-cat">Beach Club</div>
+      <div class="ptr-logo">
+        <svg viewBox="0 0 200 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="18" cy="22" r="16" stroke="#4d79ff" stroke-width="1.5"/>
+          <text x="6" y="27" font-family="Arial,sans-serif" font-size="12" font-weight="700" fill="#4d79ff">NK</text>
+          <text x="40" y="30" font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="white" letter-spacing="1">NIKKI BEACH</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Lío Ibiza -->
+    <div class="ptr reveal">
+      <div class="ptr-cat">Club — Ibiza</div>
+      <div class="ptr-logo">
+        <svg viewBox="0 0 180 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="34" font-family="Georgia,serif" font-style="italic" font-size="38" fill="white" letter-spacing="-1">Lío</text>
+          <text x="58" y="34" font-family="Arial,sans-serif" font-size="14" fill="#4d79ff" letter-spacing="3">IBIZA</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Lío Mykonos -->
+    <div class="ptr reveal">
+      <div class="ptr-cat">Club — Mykonos</div>
+      <div class="ptr-logo">
+        <svg viewBox="0 0 200 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="34" font-family="Georgia,serif" font-style="italic" font-size="38" fill="white" letter-spacing="-1">Lío</text>
+          <text x="58" y="34" font-family="Arial,sans-serif" font-size="11" fill="#4d79ff" letter-spacing="2">MYKONOS</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Pacha -->
+    <div class="ptr reveal">
+      <div class="ptr-cat">Nightlife</div>
+      <div class="ptr-logo">
+        <svg viewBox="0 0 180 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="22" r="17" fill="#c8102e" opacity=".9"/>
+          <text x="12" y="27" font-family="Arial,sans-serif" font-size="10" font-weight="700" fill="white">P</text>
+          <text x="46" y="30" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="white" letter-spacing="2">PACHA</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Bagatelle -->
+    <div class="ptr reveal">
+      <div class="ptr-cat">Restaurant & Club</div>
+      <div class="ptr-logo">
+        <svg viewBox="0 0 200 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <text x="0" y="30" font-family="Georgia,serif" font-size="22" fill="white" letter-spacing="1">BAGATELLE</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Scorpios -->
+    <div class="ptr reveal">
+      <div class="ptr-cat">Beach Club — Mykonos</div>
+      <div class="ptr-logo">
+        <svg viewBox="0 0 200 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 22 Q14 8 22 22 Q30 36 38 22" stroke="#4d79ff" stroke-width="1.5" fill="none"/>
+          <text x="46" y="30" font-family="Georgia,serif" font-size="20" fill="white" letter-spacing="1">SCORPIOS</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- VistaJet -->
+    <div class="ptr reveal">
+      <div class="ptr-cat">Private Aviation</div>
+      <div class="ptr-logo">
+        <svg viewBox="0 0 200 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="0,8 18,36 28,14 18,20" fill="#c8102e"/>
+          <text x="34" y="30" font-family="Arial,sans-serif" font-size="20" font-weight="700" fill="white" letter-spacing="1">VistaJet</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- GlobeAir -->
+    <div class="ptr reveal">
+      <div class="ptr-cat">Private Aviation</div>
+      <div class="ptr-logo">
+        <svg viewBox="0 0 200 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="20" cy="22" r="16" stroke="#4d79ff" stroke-width="1.5" fill="none"/>
+          <ellipse cx="20" cy="22" rx="8" ry="16" stroke="#4d79ff" stroke-width="1" fill="none"/>
+          <line x1="4" y1="22" x2="36" y2="22" stroke="#4d79ff" stroke-width="1"/>
+          <text x="44" y="30" font-family="Arial,sans-serif" font-size="18" font-weight="600" fill="white" letter-spacing=".5">GlobeAir</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- More -->
+    <div class="ptr reveal" style="background:var(--blue3);border:1px solid var(--border2)">
+      <div class="ptr-cat">And many more</div>
+      <div class="ptr-name-text" style="color:var(--muted2)">500+ partners worldwide</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="sec proc-bg" id="process">
+  <div class="s-tag">How It Works</div>
+  <h2 class="sec-h">Three steps to your <i>perfect experience</i></h2>
+  <div class="proc-steps">
+    <div class="proc-step reveal">
+      <div class="proc-num">01 — Request</div>
+      <div class="proc-t">Tell us what you want</div>
+      <div class="proc-d">Share your travel dates, destination, and any special requests — by message, call, or email. Nothing is too specific.</div>
+    </div>
+    <div class="proc-step reveal">
+      <div class="proc-num">02 — We handle it</div>
+      <div class="proc-t">We arrange everything</div>
+      <div class="proc-d">Our team sources the best options and manages all bookings, confirmations, and coordination — quietly and efficiently.</div>
+    </div>
+    <div class="proc-step reveal">
+      <div class="proc-num">03 — Enjoy</div>
+      <div class="proc-t">Experience the extraordinary</div>
+      <div class="proc-d">Sit back and enjoy a flawlessly organised trip or event. We remain on call throughout your stay.</div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="sec rev-bg" id="reviews">
+  <div class="s-tag">Client Reviews</div>
+  <h2 class="sec-h">What our clients <i>say</i></h2>
+
+  <div class="tp-bar">
+    <div class="tp-logo-wrap">
+      <div class="tp-star-logo">
+        <div class="tp-sbox">★</div><div class="tp-sbox">★</div><div class="tp-sbox">★</div><div class="tp-sbox">★</div><div class="tp-sbox">★</div>
+      </div>
+      <div class="tp-word">Trust<span>pilot</span></div>
+    </div>
+    <div class="tp-divider"></div>
+    <div class="tp-score-big">4.9</div>
+    <div class="tp-right">
+      <div class="tp-stars-row">
+        <div class="tp-sstar">★</div><div class="tp-sstar">★</div><div class="tp-sstar">★</div><div class="tp-sstar">★</div><div class="tp-sstar">★</div>
+      </div>
+      <div class="tp-excellent">Excellent</div>
+      <div class="tp-count">Based on 214 verified reviews</div>
+    </div>
+    <div class="tp-badge-pill">
+      <div class="tp-sstar">★</div>
+      <div class="tp-badge-text">Verified on Trustpilot</div>
+    </div>
+  </div>
+
+  <div class="rev-grid">
+    <div class="rc reveal">
+      <div class="rc-top"><div class="rc-stars"><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div></div><div class="rc-v">✓ Verified</div></div>
+      <div class="rc-quote">"Within 24 hours we had a table at Scorpios, a suite at the Four Seasons, and a transfer arranged. Absolutely exceptional."</div>
+      <div class="rc-footer"><div class="rc-av">MK</div><div><div class="rc-name">Marcus K.</div><div class="rc-loc">Entrepreneur, Munich</div></div><div class="rc-date">2 weeks ago</div></div>
+    </div>
+    <div class="rc reveal">
+      <div class="rc-top"><div class="rc-stars"><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div></div><div class="rc-v">✓ Verified</div></div>
+      <div class="rc-quote">"I needed tickets to a sold-out event — two hours later they were in my hands. Fast, discreet, and totally professional."</div>
+      <div class="rc-footer"><div class="rc-av">SR</div><div><div class="rc-name">Sophia R.</div><div class="rc-loc">CEO, Zurich</div></div><div class="rc-date">1 month ago</div></div>
+    </div>
+    <div class="rc reveal">
+      <div class="rc-top"><div class="rc-stars"><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div></div><div class="rc-v">✓ Verified</div></div>
+      <div class="rc-quote">"The private jet was arranged exactly to spec, the suite exceeded every expectation. They think ahead so you don't have to."</div>
+      <div class="rc-footer"><div class="rc-av">AV</div><div><div class="rc-name">Alexander V.</div><div class="rc-loc">Investor, Dubai</div></div><div class="rc-date">3 weeks ago</div></div>
+    </div>
+    <div class="rc reveal">
+      <div class="rc-top"><div class="rc-stars"><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div></div><div class="rc-v">✓ Verified</div></div>
+      <div class="rc-quote">"Got us into Nikki Beach on the busiest weekend of the summer — last minute. I've used other concierge services but nothing compares."</div>
+      <div class="rc-footer"><div class="rc-av">JL</div><div><div class="rc-name">Julia L.</div><div class="rc-loc">Director, London</div></div><div class="rc-date">1 month ago</div></div>
+    </div>
+    <div class="rc reveal">
+      <div class="rc-top"><div class="rc-stars"><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div></div><div class="rc-v">✓ Verified</div></div>
+      <div class="rc-quote">"Our whole Mykonos trip — hotel, transfers, clubs, dinners — handled in one conversation. Seamless from start to finish."</div>
+      <div class="rc-footer"><div class="rc-av">TP</div><div><div class="rc-name">Thomas P.</div><div class="rc-loc">Finance, Frankfurt</div></div><div class="rc-date">2 months ago</div></div>
+    </div>
+    <div class="rc reveal">
+      <div class="rc-top"><div class="rc-stars"><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div><div class="rc-star">★</div></div><div class="rc-v">✓ Verified</div></div>
+      <div class="rc-quote">"Discreet, responsive, and genuinely well-connected. They arranged access to places I didn't think were possible to book."</div>
+      <div class="rc-footer"><div class="rc-av">NB</div><div><div class="rc-name">Nina B.</div><div class="rc-loc">Entrepreneur, Vienna</div></div><div class="rc-date">6 weeks ago</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec faq-bg" id="faq">
+  <div class="faq-wrap">
+    <div>
+      <div class="s-tag">FAQ</div>
+      <h2 class="sec-h">Common <i>questions</i></h2>
+      <p class="sec-sub" style="margin-bottom:36px">More questions? We respond within hours — including weekends and public holidays.</p>
+      <a href="contact.html" class="btn-fill">Get in Touch</a>
+    </div>
+    <div class="faq-list">
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">What can I book through Access Life?<div class="faq-plus">+</div></div>
+        <div class="faq-a">Hotels, private jets, VIP tables, restaurants, beach clubs, event tickets, and bespoke travel experiences — our network covers virtually any request.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Are last-minute requests possible?<div class="faq-plus">+</div></div>
+        <div class="faq-a">Yes — last-minute and short-notice bookings are one of our specialities. Our partnerships unlock options that are simply not publicly available.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">Do you operate worldwide?<div class="faq-plus">+</div></div>
+        <div class="faq-a">Yes. Our international network spans Europe, the Middle East, Asia, the Americas, and beyond.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">How discreet is the service?<div class="faq-plus">+</div></div>
+        <div class="faq-a">Absolute discretion is a core principle. All client information is kept strictly confidential and is never shared with third parties.</div>
+      </div>
+      <div class="faq-item" onclick="toggleFaq(this)">
+        <div class="faq-q">How do I get started?<div class="faq-plus">+</div></div>
+        <div class="faq-a">Reach out by email, phone, or via the contact form. We typically respond within a few hours, even on weekends and bank holidays.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-bg" id="contact">
+  <div class="cta-inner">
+    <div class="s-tag" style="justify-content:center">Ready?</div>
+    <h2 class="sec-h">Your next extraordinary<br><i>experience starts here</i></h2>
+    <div class="cta-line"></div>
+    <p class="sec-sub">Tell us what you have in mind — we handle the rest. Discreet, efficient, and always available.</p>
+    <a href="mailto:hello@accesslifeconcierge.com" class="btn-fill" style="font-size:10px;padding:15px 46px">Request Access</a>
+    <p class="cta-email">hello@accesslifeconcierge.com · Available 24/7</p>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-top">
+    <div>
+      <div class="ft-brand">
+        <svg class="logo-svg" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg" style="height:36px;width:36px;flex-shrink:0">
+  <rect fill="#1a1f3a" x="88.71" y="88.71" width="822.58" height="822.58" rx="109.9" ry="109.9"/>
+  <path fill="#fff" d="M500.42,271.36l57.66,98.63-35.87,67.85-21.8-34.23-188.91,325.03h0c-33.84,0-54.96-36.66-37.99-65.93l226.9-391.35Z"/>
+  <path fill="#fff" d="M649.24,271.36h0c34.2,0,55.57,37.03,38.46,66.64l-187.28,324.14h225.78c17.46,29.32-3.67,66.5-37.8,66.5h-303.67l264.51-457.28Z"/>
+</svg>
+        <span class="ft-brand-text">Access Life Concierge</span>
+      </div>
+      <div class="ft-tagline">Private Concierge Service · Worldwide</div>
+    </div>
+    <div class="ft-links">
+      <div class="fc"><h4>Services</h4><a href="#services">Hotels & Resorts</a><a href="#services">Private Jets</a><a href="#services">Clubs & Nightlife</a><a href="#services">Restaurants</a><a href="#services">VIP Events</a></div>
+      <div class="fc"><h4>Partners</h4><a href="#partners">Four Seasons</a><a href="#partners">Mandarin Oriental</a><a href="#partners">VistaJet</a><a href="#partners">Nikki Beach</a></div>
+      <div class="fc"><h4>Contact</h4><a href="mailto:hello@accesslifeconcierge.com">Email Us</a><a href="contact.html">Send Request</a><a href="#faq">FAQ</a></div>
+    </div>
+  </div>
+  <div class="ft-bot">
+    <span>© 2025 Access Life Concierge. All rights reserved.</span>
+    <span style="color:var(--blue2);font-size:8px;letter-spacing:.22em;text-transform:uppercase">Exclusive · Discreet · Worldwide</span>
+  </div>
+</footer>
+
+<script>
+// Nav scroll
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>nav.classList.toggle('sc',scrollY>50),{passive:true});
+
+// Mobile menu
+const burger=document.getElementById('burger'),mob=document.getElementById('mob');
+function toggleMob(){burger.classList.toggle('open');mob.classList.toggle('open');document.body.style.overflow=mob.classList.contains('open')?'hidden':''}
+function closeMob(){burger.classList.remove('open');mob.classList.remove('open');document.body.style.overflow=''}
+
+// FAQ
+function toggleFaq(el){const o=el.classList.contains('open');document.querySelectorAll('.faq-item').forEach(i=>i.classList.remove('open'));if(!o)el.classList.add('open')}
+
+// Scroll reveal
+const obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');obs.unobserve(e.target)}}),{threshold:0.07});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+// Custom cursor (desktop only)
+if(window.matchMedia('(pointer:fine)').matches){
+  const cur=document.getElementById('cur'),ring=document.getElementById('ring');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px'},{passive:true});
+  (function raf(){rx+=(mx-rx)*.14;ry+=(my-ry)*.14;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(raf)})();
+  document.querySelectorAll('a,button,.svc-card,.rc,.ptr,.faq-item').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{cur.style.width='16px';cur.style.height='16px';ring.style.width='52px';ring.style.height='52px';ring.style.borderColor='rgba(37,87,247,.7)'});
+    el.addEventListener('mouseleave',()=>{cur.style.width='8px';cur.style.height='8px';ring.style.width='32px';ring.style.height='32px';ring.style.borderColor='rgba(37,87,247,.5)'});
+  });
+}
+</script>
+</body>
+</html>
